@@ -1,5 +1,6 @@
 var currentDay = document.getElementById("currentDay");
 $(currentDay).text(moment().format('LL'));
+var textBox = document.querySelector(".description");
 
 // Checks current time(24hr format) and updates time blocks style to reflect past, present, future
 var currentTime = function() {
@@ -115,18 +116,49 @@ var currentTime = function() {
       $(fiveBlock).addClass("present");
     break;
     default:
-        $(nineBlock).addClass("future");
-        $(tenBlock).addClass("future");
-        $(elevenBlock).addClass("future");
-        $(twelveBlock).addClass("future");
-        $(oneBlock).addClass("future");
-        $(twoBlock).addClass("future");
-        $(threeBlock).addClass("future");
-        $(fourBlock).addClass("future");
-        $(fiveBlock).addClass("future");
-  };
+      $(nineBlock).addClass("future");
+      $(tenBlock).addClass("future");
+      $(elevenBlock).addClass("future");
+      $(twelveBlock).addClass("future");
+      $(oneBlock).addClass("future");
+      $(twoBlock).addClass("future");
+      $(threeBlock).addClass("future");
+      $(fourBlock).addClass("future");
+      $(fiveBlock).addClass("future");
+    };
 };
 currentTime();
+
+// To create element that makes up the description text
+$("#nine").click(function() {
+  // checks curent text of descriptions
+  var currentText = $(this)
+    .text()
+    .trim();
+
+  // replace element with new textarea
+  var input = $("<textarea>").addClass("description").val(currentText);
+  $(this).replaceWith(input);
+  
+});
+
+// To load input
+var loadInput = function() {
+  input = JSON.parse(localStorage.getItem("input"));
+};
+
+// To save input in description to localStorage
+var saveInput = function() {
+  localStorage.setItem("input", JSON.stringify(input));
+};
+
+// saves input to localStorage and appends to the div
+$("#nineBtn").click(function() {
+  var input = $("#nine").value
+  
+  $("#nine").append(input);
+});
+
 
 
 
