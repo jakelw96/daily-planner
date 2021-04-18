@@ -1,6 +1,14 @@
 var currentDay = document.getElementById("currentDay");
 $(currentDay).text(moment().format('LL'));
-var textBox = document.querySelector(".description");
+$("#nine").attr("contentEditable", true);
+$("#ten").attr("contentEditable", true);
+$("#eleven").attr("contentEditable", true);
+$("#twelve").attr("contentEditable", true);
+$("#one").attr("contentEditable", true);
+$("#two").attr("contentEditable", true);
+$("#three").attr("contentEditable", true);
+$("#four").attr("contentEditable", true);
+$("#five").attr("contentEditable", true);
 
 // Checks current time(24hr format) and updates time blocks style to reflect past, present, future
 var currentTime = function() {
@@ -129,50 +137,142 @@ var currentTime = function() {
 };
 currentTime();
 
-//Function to create a new p element when the div is clicked
-//var createText = function() {/
-  //var text = nineBlock.text()
-  //var newText = $("<p>");
-  //$(this).attr("contentEditable", true);
-  //$(newText).text(text);
-//}
+$("#clear").on("click", function() {
+    localStorage.clear();
 
-// To create element that makes up the description text
-$("#nine").click(function() {
-  if(!$.trim($("#nine").html()).length) {
-    $(this).attr("contentEditable", true); 
+});
+
+// Start of functions to add text for each time block
+
+// To create a p element when the div is empty for 9am block
+var createTextNine = function () {
+    $("#nine").attr("contentEditable", false);
+    var input = $("#nine").html();
+    var textP = $("<p>");
+    $(textP).addClass("textColor");
+    $(textP).attr("id", "textNineP");
+    textP.value = input;
+    var newText = textP.value;
+
+    // Emptys div from when text is first typed in
+    $("#nine").empty();
+
+    // Appends the entered value to the dynamically created <p> element
+    $(textP).append(newText);
+    
+    // Appends to time block
+    $("#nine").append(textP);
+    
+    // Saves to localStorage
+    localStorage.setItem("Plans-nine-am", JSON.stringify(textP));
+};
+
+// To create a p element when the div is empty for 10am block
+var createTextTen = function () {
+    $("#ten").attr("contentEditable", false);
+    var input = $("#ten").html();
+    var textP = $("<p>");
+    $(textP).addClass("textColor");
+    $(textP).attr("id", "textTenP");
+    textP.value = input;
+    var newText = textP.value;
+
+    // Emptys div from when text is first typed in
+    $("#ten").empty();
+
+    // Appends the entered value to the dynamically created <p> element
+    $(textP).append(newText);
+    
+    // Appends to time block
+    $("#ten").append(textP);
+    
+    // Saves to localStorage
+    localStorage.setItem("Plans-ten-am", JSON.stringify(textP));
+};
+
+// Start of functions to edit text for each time block
+
+// To update the p element in 9am block if one is already in the div, 
+// occurs when #nineBtn is clicked when a p element already exists
+var editTextNine = function (currentText) {
+    $("#textNineP").attr("contentEditable", false);
+    var textP = $("<p>");
+    $(textP).addClass("textColor");
+    $(textP).attr("id", "textNineP");
+    textP.value = currentText;
+    var newText = textP.value;
+    console.log(newText);
+    $(textP).append(newText);
+    $("#textNineP").replaceWith(textP);
+    localStorage.setItem("Plans-nine-am", JSON.stringify(textP));
+};
+
+var editTextTen = function (currentText) {
+    $("#textTenP").attr("contentEditable", false);
+    var textP = $("<p>");
+    $(textP).addClass("textColor");
+    $(textP).attr("id", "textTenP");
+    textP.value = currentText;
+    var newText = textP.value;
+    console.log(newText);
+    $(textP).append(newText);
+    $("#textTenP").replaceWith(textP);
+    localStorage.setItem("Plans-ten-am", JSON.stringify(textP));
+};
+
+
+
+// Start of save buttons for each time block
+
+// save btn for 9AM block
+$("#nineBtn").click(function() {
+  var textBlock = document.getElementById("nine");
+  var text = document.getElementById("textNineP");
+  if (textBlock.contains(text)) {
+    var $text = text.textContent;  
+    editTextNine($text);
   } else {
-    $(this).attr("contentEditable", false);
+      createTextNine();
   }
 });
 
-// saves input to localStorage and appends to the div
-$("#nineBtn").click(function() {
-  $("#nine").attr("contentEditable", false);
-  var input = $("#nine").html();
-  var textP = $("<p>");
-  $(textP).addClass("textColor");
-  $(textP).attr("id", "textP");
-  textP.value = input;
-  var newText = textP.value;
-  $("#nine").empty();
-  $(textP).append(newText);
-  $("#nine").append(textP);
-});
+// save btn for 10am block
+$("#tenBtn").click(function() {
+    var textBlock = document.getElementById("ten");
+    var text = document.getElementById("textTenP");
+    if (textBlock.contains(text)) {
+      var $text = text.textContent;  
+      editTextTen($text);
+    } else {
+      createTextTen();
+    }
+  });
+
+// Start of functions to allow text in timeblock to be edited
 
 // Allows to update text in div
 $("#nine").on("click", "p", function() {
-  var text = $(this)
-  .text()
-  .trim();
-
-  console.log("p was clicked");
+  $("#textNineP").attr("contentEditable", true);
+});
   
-  $("#nineBtn").click(function() {
-      console.log("save btn was clicked with an element already on the page");
-  })
-})
+// Loads data from localStorage on time blocks
+var loadPlans = function() {
+    var nineData = JSON.parse(localStorage.getItem("Plans-nine-am"));
+    if (nineData !== null) {
+        var nineVal = nineData.value;
+        var textP = $("<p>");
+        $(textP).addClass("textColor");
+        $(textP).attr("id", "textNineP");
+        $(textP).append(nineVal)
+        $("#nine").append(textP) 
+    } else {
+      console.log("Nothing in localStorage")
+    }
+};
+loadPlans();
+
+
     
 
-// create if statement to only execute creating a p element if there isn't one currently in the div
+
 
